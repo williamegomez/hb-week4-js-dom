@@ -5,18 +5,14 @@
 }
 
 .Gallery{
-    display: grid;
     width: 100%;
     height: 400px;
-    background-image: url("images/image1.jpg"); 
-    grid-template-areas: "."
-                         "arrowscontainer"
-                         "."
-                         "pointscontainer";
-    grid-template-rows: 1fr 40px 1fr 40px;
+    position: relative;
 
     &__arrows-container{
-        grid-area: arrowscontainer;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
         height: 50px;
         width: 100%;
         display: flex;
@@ -24,11 +20,35 @@
     }
 
     &__points-container{
-        grid-area: pointscontainer;
+        position: absolute;
+        bottom: 0px;
         width: 100%;
         height: 40px;
         display: flex;
         justify-content: center;
+    }
+
+    &__images-container{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+
+        overflow: hidden;
+    }
+
+    &__image-item{
+        width: 100%;
+        opacity: 0;
+        display: none;
+        transform: translateY(-30%);
+
+        &--selected {
+            opacity: 1;
+            display: block;
+        }
     }
 
     &__button{
@@ -38,22 +58,37 @@
         width: 40px;
         border: none;
         border-radius: 50%;
+
         &:hover {
-            border: solid white;
+            border: 2px solid black;
         }
     }
     
-    &__button--left, &__button--right{
+    &__button-left, &__button-right{
+        text-align: center;
+        vertical-align: middle;
+        line-height: 100%;
+        
         i{
             text-decoration: none;
-            font-size: 10px;
-            color: black;
+            font-size: 20px;
+            color:gray;
+        }
+
+        &--disabled {
+           opacity: 0;
+           pointer-events: none;
         }
     }
 
-    &__button--point{
-        height: 30px;
-        width: 30px;
+    &__button-point{
+        height: 20px;
+        width: 20px;
+        border: solid black;
+
+        &--selected {
+            opacity: 1;
+        }
     }
 
     
