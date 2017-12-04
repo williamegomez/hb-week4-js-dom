@@ -1,17 +1,17 @@
-class Gallery {
-  constructor (galleryreference) {
+export class Gallery {
+  constructor (galleryreference, imagesArray) {
     // Inflating data
-    this.isDatacomplete = false
+    this.imagesArray = imagesArray
     this.galleryreference = galleryreference
     this.inflateHTML(galleryreference)
-    // Getting data
-    this.getDataFromFirebase()
-    this.imagecount = 0
     // After inflated, get image container
     this.imagecontainer = this.galleryreference.querySelector('.Gallery__images-container')
     this.pointscontainer = this.galleryreference.querySelector('.Gallery__points-container')
     this.arrowscontainer = this.galleryreference.querySelector('.Gallery__arrows-container')
     this.previousindex = 0
+    this.imagecount = imagesArray.length
+    this.setImages()
+    this.setEvents()
   }
 
   inflateHTML () {
@@ -27,47 +27,15 @@ class Gallery {
     this.galleryreference.innerHTML = html
   }
 
-  getDataFromFirebase () {
-    let config = {
-      apiKey: 'AIzaSyCofVBmEIKV9V2tBFwk_7YfOt4-Ydo9iIE',
-      authDomain: 'hb-week4-js-dom.firebaseapp.com',
-      databaseURL: 'https://hb-week4-js-dom.firebaseio.com',
-      projectId: 'hb-week4-js-dom',
-      storageBucket: 'hb-week4-js-dom.appspot.com',
-      messagingSenderId: '108226223693'
-    }
-    /* global firebase */
-    firebase.initializeApp(config)
-    this.database = firebase.database()
-    this.storage = firebase.storage()
-    let GalleryRef = this.database.ref('images/Gallery')
-
-    this.urlArray = []
-
-    GalleryRef.on('value', (snapshot) => {
-      let storageRef = this.storage.ref()
-
-      snapshot.forEach((childSnapshot) => {
-        storageRef.child('Gallery/' + childSnapshot.val().name).getDownloadURL().then((url) => {
-          this.urlArray.push(url)
-          this.setImage(url)
-          this.imagecount++
-          if (this.imagecount === snapshot.numChildren()) {
-            console.log('Finished')
-            this.setEvents()
-          }
-        })
-      })
-    })
-  }
-
-  setImage (url) {
-    if (this.imagecount === 0) {
-      this.imagecontainer.innerHTML = this.imagecontainer.innerHTML + '<img class="Gallery__image-item Gallery__image-item--selected" src=' + url + '></img>'
-      this.pointscontainer.innerHTML = this.pointscontainer.innerHTML + '<button class="Gallery__button Gallery__button-point Gallery__button-point--selected"></button>'
-    } else {
-      this.imagecontainer.innerHTML = this.imagecontainer.innerHTML + '<img class="Gallery__image-item" src=' + url + '></img>'
-      this.pointscontainer.innerHTML = this.pointscontainer.innerHTML + '<button class="Gallery__button Gallery__button-point"></button>'
+  setImages () {
+    for (let i = 0; i < this.imagecount; i++) {
+      if (i === 0) {
+        this.imagecontainer.innerHTML = this.imagecontainer.innerHTML + '<img class="Gallery__image-item Gallery__image-item--selected" src=' + this.imagesArray[i] + '></img>'
+        this.pointscontainer.innerHTML = this.pointscontainer.innerHTML + '<button class="Gallery__button Gallery__button-point Gallery__button-point--selected"></button>'
+      } else {
+        this.imagecontainer.innerHTML = this.imagecontainer.innerHTML + '<img class="Gallery__image-item" src=' + this.imagesArray[i] + '></img>'
+        this.pointscontainer.innerHTML = this.pointscontainer.innerHTML + '<button class="Gallery__button Gallery__button-point"></button>'
+      }
     }
   }
 
@@ -76,79 +44,120 @@ class Gallery {
     const items = this.pointscontainer.querySelectorAll('.Gallery__button-point')
     items.forEach((item, index) => {
       item.addEventListener('click', () => {
-        this.enableNewdisablePrevious(index, this.previousindex)
+        this.enableNewdisablePrevious(index)
         this.previousindex = index
       })
     })
 
-    // Arrows-events
     const arrowleft = this.arrowscontainer.querySelector('.Gallery__button-left')
+    const arrowright = this.arrowscontainer.querySelector('.Gallery__button-right')
+
+    // Arrows-events
     arrowleft.addEventListener('click', () => {
-      if (this.previousindex === 1) {
+      let index = this.previousindex - 1
+
+      const isTheSamePrevious = this.previousindex === index
+      const isLowerThanZero = index < 0
+      const isGreaterThanCount = index > this.imagecount - 1
+
+      arrowright.classList.remove('Gallery__button-right--disabled')
+
+      if (index <= 0) {
         arrowleft.classList.add('Gallery__button-left--disabled')
       } else {
         arrowleft.classList.remove('Gallery__button-left--disabled')
-        arrowright.classList.remove('Gallery__button-right--disabled')
       }
-      let index = this.previousindex - 1
-      this.enableNewdisablePrevious(index, this.previousindex)
+
+      if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
+        this.enableNewdisablePrevious(index)
+      }
       this.previousindex = index
     })
 
-    const arrowright = this.arrowscontainer.querySelector('.Gallery__button-right')
     arrowright.addEventListener('click', () => {
-      if (this.previousindex === this.imagecount - 2) {
+      let index = this.previousindex + 1
+      const isTheSamePrevious = this.previousindex === index
+      const isLowerThanZero = index < 0
+      const isGreaterThanCount = index > this.imagecount - 1
+
+      arrowleft.classList.remove('Gallery__button-left--disabled')
+
+      if (index >= this.imagecount - 1) {
         arrowright.classList.add('Gallery__button-right--disabled')
       } else {
-        arrowleft.classList.remove('Gallery__button-left--disabled')
         arrowright.classList.remove('Gallery__button-right--disabled')
       }
 
-      let index = this.previousindex + 1
-      this.enableNewdisablePrevious(index, this.previousindex)
+      if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
+        this.enableNewdisablePrevious(index)
+      }
       this.previousindex = index
     })
 
     document.addEventListener('keydown', (event) => {
       if (event.keyCode === 37) {
-        if (this.previousindex === 1) {
+        let index = this.previousindex - 1
+        const isTheSamePrevious = this.previousindex === index
+        const isLowerThanZero = index < 0
+        const isGreaterThanCount = index > this.imagecount - 1
+
+        arrowright.classList.remove('Gallery__button-right--disabled')
+
+        if (index <= 1) {
           arrowleft.classList.add('Gallery__button-left--disabled')
         } else {
           arrowleft.classList.remove('Gallery__button-left--disabled')
-          arrowright.classList.remove('Gallery__button-right--disabled')
         }
-        let index = this.previousindex - 1
-        this.enableNewdisablePrevious(index, this.previousindex)
+
+        if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
+          this.enableNewdisablePrevious(index)
+        }
         this.previousindex = index
+
+        if (isGreaterThanCount) {
+          this.previousindex = this.imagecount - 1
+        }
+
+        if (isLowerThanZero) {
+          this.previousindex = 0
+        }
       } else if (event.keyCode === 39) {
-        if (this.previousindex === this.imagecount - 2) {
+        let index = this.previousindex + 1
+        const isTheSamePrevious = this.previousindex === index
+        const isLowerThanZero = index < 0
+        const isGreaterThanCount = index > this.imagecount - 1
+
+        arrowleft.classList.remove('Gallery__button-left--disabled')
+
+        if (index >= this.imagecount - 1) {
           arrowright.classList.add('Gallery__button-right--disabled')
         } else {
-          arrowleft.classList.remove('Gallery__button-left--disabled')
           arrowright.classList.remove('Gallery__button-right--disabled')
         }
-        let index = this.previousindex + 1
-        this.enableNewdisablePrevious(index, this.previousindex)
+
+        if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
+          this.enableNewdisablePrevious(index)
+        }
         this.previousindex = index
+
+        if (isGreaterThanCount) {
+          this.previousindex = this.imagecount - 1
+        }
+
+        if (isLowerThanZero) {
+          this.previousindex = 0
+        }
       }
     }, true)
   }
 
-  enableNewdisablePrevious (indexnew, indexprevious) {
+  enableNewdisablePrevious (indexnew) {
     const images = this.imagecontainer.querySelectorAll('.Gallery__image-item')
     const items = this.pointscontainer.querySelectorAll('.Gallery__button-point')
-
-    var isTheSamePrevious = indexprevious === indexnew
-    if (!isTheSamePrevious) {
-      items[indexprevious].classList.remove('Gallery__button-point--selected')
-      items[indexnew].classList.add('Gallery__button-point--selected')
-      images[indexprevious].classList.remove('Gallery__image-item--selected')
-      images[indexnew].classList.add('Gallery__image-item--selected')
-    }
+    items[this.previousindex].classList.remove('Gallery__button-point--selected')
+    items[indexnew].classList.add('Gallery__button-point--selected')
+    images[this.previousindex].classList.remove('Gallery__image-item--selected')
+    images[indexnew].classList.add('Gallery__image-item--selected')
+    items[indexnew].focus()
   }
 }
-
-/* eslint-disable */
-const g1 = new Gallery(document.querySelector(".g1"))
-//const g2 = new Gallery(document.querySelector(".g2"))
-/* eslint-enable */
