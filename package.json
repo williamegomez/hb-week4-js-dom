@@ -4,13 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "http-server -c-1",
+    "build": "npm-run-all clean lint:** --parallel build:css copy:**",
+    "build:css": "node-sass src/index.scss public/style.css --output-style compressed",
+    "lint": "npm-run-all lint:**",
+    "lint:css": "stylelint 'src/**/*.scss' --syntax scss",
+    "lint:js": "standard 'src/**/*.js'",
+    "watch:html": "onchange 'src/**/*.html' -- npm run copy:html",
+    "watch:css": "npm run build:css -- -w --source-map true",
+    "watch:js": "onchange 'src/**/*.js' -- npm-run-all lint:js copy:js",
+    "copy:html": "copy 'src/**/*.html' public",
+    "copy:js": "copy 'src/**/*.js' public",
+    "copy:js": "copy 'src/**/*.jpg' public",
+    "precommit": "npm run lint",
+    "clean": "rm -rf public/",
+    "start:build": "npm-run-all build serve",
+    "start": "npm-run-all copy:** build:css --parallel watch:** serve"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/williamegomez/hb-week4-js-dom.git"
   },
-  "author": "",
+  "author": "William Gómez",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/williamegomez/hb-week4-js-dom/issues"

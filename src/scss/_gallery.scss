@@ -1,0 +1,60 @@
+.body-gallery{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.Gallery{
+    display: grid;
+    width: 100%;
+    height: 400px;
+    background-image: url("images/image1.jpg"); 
+    grid-template-areas: "."
+                         "arrowscontainer"
+                         "."
+                         "pointscontainer";
+    grid-template-rows: 1fr 40px 1fr 40px;
+
+    &__arrows-container{
+        grid-area: arrowscontainer;
+        height: 50px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__points-container{
+        grid-area: pointscontainer;
+        width: 100%;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__button{
+        opacity: 0.5;
+        margin: 5px;
+        height: 40px;
+        width: 40px;
+        border: none;
+        border-radius: 50%;
+        &:hover {
+            border: solid white;
+        }
+    }
+    
+    &__button--left, &__button--right{
+        i{
+            text-decoration: none;
+            font-size: 10px;
+            color: black;
+        }
+    }
+
+    &__button--point{
+        height: 30px;
+        width: 30px;
+    }
+
+    
+}

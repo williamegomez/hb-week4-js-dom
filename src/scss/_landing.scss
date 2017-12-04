@@ -1,0 +1,25 @@
+
+.MainPage{
+    background-image: url("images/landing-background.jpg");
+    background-size: cover;
+
+    font-family: $fontname;
+    font-size: 45px;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__title{
+        margin: 0px 0px 10px;
+        font-size: 60px;
+    }
+
+    &__list-link{
+        text-decoration: none;
+        color: black;
+    }
+}
