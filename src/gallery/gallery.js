@@ -48,26 +48,21 @@ export class Gallery {
         this.previousindex = index
       })
     })
-
     const arrowleft = this.arrowscontainer.querySelector('.Gallery__button-left')
     const arrowright = this.arrowscontainer.querySelector('.Gallery__button-right')
 
     // Arrows-events
     arrowleft.addEventListener('click', () => {
       let index = this.previousindex - 1
-
       const isTheSamePrevious = this.previousindex === index
       const isLowerThanZero = index < 0
       const isGreaterThanCount = index > this.imagecount - 1
-
       arrowright.classList.remove('Gallery__button-right--disabled')
-
       if (index <= 0) {
         arrowleft.classList.add('Gallery__button-left--disabled')
       } else {
         arrowleft.classList.remove('Gallery__button-left--disabled')
       }
-
       if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
         this.enableNewdisablePrevious(index)
       }
@@ -79,15 +74,12 @@ export class Gallery {
       const isTheSamePrevious = this.previousindex === index
       const isLowerThanZero = index < 0
       const isGreaterThanCount = index > this.imagecount - 1
-
       arrowleft.classList.remove('Gallery__button-left--disabled')
-
       if (index >= this.imagecount - 1) {
         arrowright.classList.add('Gallery__button-right--disabled')
       } else {
         arrowright.classList.remove('Gallery__button-right--disabled')
       }
-
       if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
         this.enableNewdisablePrevious(index)
       }
@@ -101,15 +93,12 @@ export class Gallery {
         const isTheSamePrevious = this.previousindex === index
         const isLowerThanZero = index < 0
         const isGreaterThanCount = index > this.imagecount - 1
-
         arrowright.classList.remove('Gallery__button-right--disabled')
-
         if (index <= 1) {
           arrowleft.classList.add('Gallery__button-left--disabled')
         } else {
           arrowleft.classList.remove('Gallery__button-left--disabled')
         }
-
         if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
           this.enableNewdisablePrevious(index)
         }
@@ -118,7 +107,6 @@ export class Gallery {
         if (isGreaterThanCount) {
           this.previousindex = this.imagecount - 1
         }
-
         if (isLowerThanZero) {
           this.previousindex = 0
         }
@@ -127,24 +115,19 @@ export class Gallery {
         const isTheSamePrevious = this.previousindex === index
         const isLowerThanZero = index < 0
         const isGreaterThanCount = index > this.imagecount - 1
-
         arrowleft.classList.remove('Gallery__button-left--disabled')
-
         if (index >= this.imagecount - 1) {
           arrowright.classList.add('Gallery__button-right--disabled')
         } else {
           arrowright.classList.remove('Gallery__button-right--disabled')
         }
-
         if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
           this.enableNewdisablePrevious(index)
         }
         this.previousindex = index
-
         if (isGreaterThanCount) {
           this.previousindex = this.imagecount - 1
         }
-
         if (isLowerThanZero) {
           this.previousindex = 0
         }

@@ -5,6 +5,7 @@
 }
 
 .Gallery{
+		margin-top: 10px;
     width: 100%;
     height: 400px;
     position: relative;
@@ -35,15 +36,17 @@
         height: 100%;
         width: 100%;
         z-index: -1;
-
-        overflow: hidden;
+				background-color: black;
+				display: flex;
+				overflow: hidden;
+				justify-content: center;
     }
 
     &__image-item{
-        width: 100%;
+				height: 100%;
         opacity: 0;
-        display: none;
-        transform: translateY(-30%);
+				display: none;
+				transition: opacity display 2s;
 
         &--selected {
             opacity: 1;
@@ -58,6 +61,7 @@
         width: 40px;
         border: none;
         border-radius: 50%;
+				border: 2px solid rgb(63, 63, 63);
 
         &:hover {
             border: 2px solid black;
@@ -79,7 +83,6 @@
     &__button-point{
         height: 20px;
         width: 20px;
-        border: solid black;
 
         &--selected {
             opacity: 1;
@@ -87,4 +90,66 @@
     }
 
     
+}
+
+//Medium is default
+
+@media  screen and (max-width: 640px) { // Small
+	.Gallery{
+    height: 300px;
+
+    &__arrows-container{
+        height: 40px;
+    }
+
+    &__points-container{
+        height: 40px;
+    }
+
+		&__button{
+			height: 40px;
+			width: 40px;
+			border: 1px solid rgb(63, 63, 63);
+
+			&:hover {
+					border: 1px solid black;
+			}
+		}
+		
+
+		&__button-point{
+				height: 20px;
+				width: 20px;
+		}
+	}
+}
+
+@media  screen and (min-width: 1024px) { // Large
+	.Gallery{
+    height: 800px;
+
+    &__arrows-container{
+        height: 100px;
+    }
+
+    &__points-container{
+        height: 100px;
+    }
+
+		&__button{
+			height: 100px;
+			width: 100px;
+			border: 5px solid rgb(63, 63, 63);
+
+			&:hover {
+					border: 5px solid black;
+			}
+		}
+		
+
+		&__button-point{
+				height: 80px;
+				width: 80px;
+		}
+	}
 }
