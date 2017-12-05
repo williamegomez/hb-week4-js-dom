@@ -1,3 +1,5 @@
+import { Gallery } from './gallery.js'
+
 var config = {
   apiKey: 'AIzaSyCofVBmEIKV9V2tBFwk_7YfOt4-Ydo9iIE',
   authDomain: 'hb-week4-js-dom.firebaseapp.com',
@@ -9,14 +11,15 @@ var config = {
 /* global firebase */
 firebase.initializeApp(config)
 var database = firebase.database()
-var storage = firebase.storage()
-var storageRef = storage.ref()
-var GalleryRef = database.ref('images/Gallery')
+var galleryRef = database.ref('images/Gallery')
 
-GalleryRef.on('value', (snapshot) => {
+export var imageArray = []
+galleryRef.on('value', (snapshot) => {
   snapshot.forEach((childSnapshot) => {
-    storageRef.child('Gallery/' + childSnapshot.val().name).getDownloadURL().then((url) => {
-      console.log('Finished')
-    })
+    imageArray.push(childSnapshot.val().url)
   })
+
+  /* eslint-disable */
+  const g2 = new Gallery(document.querySelector(".g2"),imageArray)
+  /* eslint-enable */
 })
