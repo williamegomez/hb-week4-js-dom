@@ -4,5 +4,5 @@ const imagesArray = ['https://www.uv.es/recursos/fatwirepub/ccurl/1004/586/big_d
 
 /* eslint-disable */
 const g1 = new Gallery(document.querySelector(".g1"),imagesArray)
-//const g2 = new Gallery(document.querySelector(".g2"))
+const g2 = new Gallery(document.querySelector(".g2"),imagesArray)
 /* eslint-enable */
