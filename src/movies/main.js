@@ -10,11 +10,12 @@ var xhttp = new XMLHttpRequest()
 xhttp.onreadystatechange = function () {
   if (this.readyState === 4 && this.status === 200) {
     console.log(JSON.parse(this.response))
-    const seriesArray = JSON.parse(this.response).map((value) => {
+    // Just preview the first 30 value
+    const seriesArray = JSON.parse(this.response).slice(0, 30).map((value) => {
       return {
         title: value.name,
         imageurl: value.image.medium,
-        content: value.summary,
+        year: String(value.premiered).slice(0, 4),
         fullcontent: value.summary,
         category: value.genres
       }

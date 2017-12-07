@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "http-server -c-1",
+    "serve": "http-server -c-1 --silent",
     "build": "npm-run-all clean lint:** --parallel build:css copy:**",
     "build:css": "node-sass src/index.scss public/style.css --output-style compressed",
     "lint": "npm-run-all lint:**",
