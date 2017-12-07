@@ -13,12 +13,12 @@
 }
 
 .Displayer{
+    margin: 10px 0px;
     display: flex;
     flex-direction: column;
 
     &__filterbar{
         border: 2px solid black;
-        height: 40px;
         background-color: red;
         display: flex;
         align-items: center;
@@ -31,10 +31,11 @@
     &__list{
         margin: 5px 10px;
         display: flex;
+        flex-wrap: wrap;
     }
 
     &__list-item{
-        margin-left: 15px;
+        margin: 10px;
     }
 
     &__results{
@@ -65,6 +66,8 @@
         display: flex;
         flex-direction: column;
         border-radius: 10px;
+        text-overflow: ellipsis;
+        overflow:hidden;
 
         &--rotated{
             z-index: 1;
@@ -83,6 +86,8 @@
         flex-direction: column;
         display: flex;
         border-radius: 10px;
+        text-overflow: ellipsis;
+        overflow:hidden;
 
         &--rotated{
             z-index: 2;

@@ -1,5 +1,6 @@
 export class Displayer {
   constructor (node, data) {
+    console.log(node)
     this.node = node
     this.data = data
     this.inflateHTML()
@@ -29,8 +30,8 @@ export class Displayer {
   static get templates () {
     return {
       listitem: `<li class="Displayer__list-item">
-                  <label class="Displayer_radio-text" for="{category}">
-                  <input type="radio" class="Displayer_radio-category" id="{category}" name="category">{category}</label>
+                  <label class="Displayer_radio-text">
+                  <input type="radio" class="Displayer_radio-category" name="category">{category}</label>
                 </li>`,
       carditem: `<section class="Movie-card">
                   <div class="Movie-card__front">
@@ -39,18 +40,19 @@ export class Displayer {
                     <p class="Movie-card__briefcontent">{content}</p>
                   </div>
                   <div class="Movie-card__back">
-                    <p class="Movie-card__largecontent">{content}</p>
+                    <p class="Movie-card__largecontent">{fullcontent}</p>
                   </div>
                 </section>`
     }
   }
 
   setCategories () {
-    const categories = this.data.map(function (value) {
+    const categories = this.data.map(function (value, index, array) {
       return value.category
     })
+    var fullcategories = [].concat.apply([], categories)
     // Unique categories
-    this.unicategories = categories.filter(function (value, index, array) {
+    this.unicategories = fullcategories.filter(function (value, index, array) {
       return array.indexOf(value) === index
     })
     const htmlCategories = this.unicategories.map(function (value) {
@@ -62,7 +64,7 @@ export class Displayer {
 
   setCards () {
     this.htmlCards = this.data.map(function (value) {
-      return Displayer.templates.carditem.replace('{title}', value.title).replace('{imageurl}', value.imageurl).replace(/{content}/gi, value.content)
+      return Displayer.templates.carditem.replace('{title}', value.title).replace('{imageurl}', value.imageurl).replace('{content}', value.content).replace('{fullcontent}', value.fullcontent)
     }).join('')
     this.resultsContainer.innerHTML = this.htmlCards
   }
@@ -99,7 +101,7 @@ export class Displayer {
 
   setDisplayCards (index) {
     this.data.forEach((value, i) => {
-      if (value.category === this.unicategories[index]) {
+      if (value.category.indexOf(this.unicategories[index]) !== -1) {
         this.carditems[i].classList.remove('Movie-card--deactivated')
         this.carditems[i].classList.add('Movie-card--activated')
       } else {
