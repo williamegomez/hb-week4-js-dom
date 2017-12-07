@@ -8,9 +8,13 @@ export class Gallery {
     this.imagecontainer = this.galleryreference.querySelector('.Gallery__images-container')
     this.pointscontainer = this.galleryreference.querySelector('.Gallery__points-container')
     this.arrowscontainer = this.galleryreference.querySelector('.Gallery__arrows-container')
-    this.previousindex = 0
+    this.arrowleft = this.arrowscontainer.querySelector('.Gallery__button-left')
+    this.arrowright = this.arrowscontainer.querySelector('.Gallery__button-right')
+    this.currentIndex = 0
     this.imagecount = imagesArray.length
     this.setImages()
+    this.images = this.imagecontainer.querySelectorAll('.Gallery__image-item')
+    this.items = this.pointscontainer.querySelectorAll('.Gallery__button-point')
     this.setEvents()
   }
 
@@ -28,15 +32,19 @@ export class Gallery {
   }
 
   setImages () {
+    var htmlimagecontainer = ''
+    var htmlpointscontainer = ''
     for (let i = 0; i < this.imagecount; i++) {
       if (i === 0) {
-        this.imagecontainer.innerHTML = this.imagecontainer.innerHTML + '<img class="Gallery__image-item Gallery__image-item--selected" src=' + this.imagesArray[i] + '></img>'
-        this.pointscontainer.innerHTML = this.pointscontainer.innerHTML + '<button class="Gallery__button Gallery__button-point Gallery__button-point--selected"></button>'
+        htmlimagecontainer += `<img class="Gallery__image-item Gallery__image-item--selected" src=${this.imagesArray[i]}></img>`
+        htmlpointscontainer += '<button class="Gallery__button Gallery__button-point Gallery__button-point--selected"></button>'
       } else {
-        this.imagecontainer.innerHTML = this.imagecontainer.innerHTML + '<img class="Gallery__image-item" src=' + this.imagesArray[i] + '></img>'
-        this.pointscontainer.innerHTML = this.pointscontainer.innerHTML + '<button class="Gallery__button Gallery__button-point"></button>'
+        htmlimagecontainer += `<img class="Gallery__image-item" src=${this.imagesArray[i]}></img>`
+        htmlpointscontainer += '<button class="Gallery__button Gallery__button-point"></button>'
       }
     }
+    this.pointscontainer.innerHTML = htmlpointscontainer
+    this.imagecontainer.innerHTML = htmlimagecontainer
   }
 
   setEvents () {
@@ -44,104 +52,65 @@ export class Gallery {
     const items = this.pointscontainer.querySelectorAll('.Gallery__button-point')
     items.forEach((item, index) => {
       item.addEventListener('click', () => {
-        this.enableNewdisablePrevious(index)
-        this.previousindex = index
+        this.changeState(index)
       })
     })
-    const arrowleft = this.arrowscontainer.querySelector('.Gallery__button-left')
-    const arrowright = this.arrowscontainer.querySelector('.Gallery__button-right')
-
     // Arrows-events
-    arrowleft.addEventListener('click', () => {
-      let index = this.previousindex - 1
-      const isTheSamePrevious = this.previousindex === index
-      const isLowerThanZero = index < 0
-      const isGreaterThanCount = index > this.imagecount - 1
-      arrowright.classList.remove('Gallery__button-right--disabled')
-      if (index <= 0) {
-        arrowleft.classList.add('Gallery__button-left--disabled')
-      } else {
-        arrowleft.classList.remove('Gallery__button-left--disabled')
-      }
-      if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
-        this.enableNewdisablePrevious(index)
-      }
-      this.previousindex = index
+    this.arrowleft.addEventListener('click', () => {
+      let index = this.currentIndex - 1
+      this.changeState(index)
     })
-
-    arrowright.addEventListener('click', () => {
-      let index = this.previousindex + 1
-      const isTheSamePrevious = this.previousindex === index
-      const isLowerThanZero = index < 0
-      const isGreaterThanCount = index > this.imagecount - 1
-      arrowleft.classList.remove('Gallery__button-left--disabled')
-      if (index >= this.imagecount - 1) {
-        arrowright.classList.add('Gallery__button-right--disabled')
-      } else {
-        arrowright.classList.remove('Gallery__button-right--disabled')
-      }
-      if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
-        this.enableNewdisablePrevious(index)
-      }
-      this.previousindex = index
+    this.arrowright.addEventListener('click', () => {
+      let index = this.currentIndex + 1
+      this.changeState(index)
     })
-
+    // Keys-Events
     this.galleryreference.addEventListener('keydown', (event) => {
-      console.log('teclas')
-      if (event.keyCode === 37) {
-        let index = this.previousindex - 1
-        const isTheSamePrevious = this.previousindex === index
-        const isLowerThanZero = index < 0
-        const isGreaterThanCount = index > this.imagecount - 1
-        arrowright.classList.remove('Gallery__button-right--disabled')
-        if (index <= 1) {
-          arrowleft.classList.add('Gallery__button-left--disabled')
-        } else {
-          arrowleft.classList.remove('Gallery__button-left--disabled')
-        }
-        if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
-          this.enableNewdisablePrevious(index)
-        }
-        this.previousindex = index
-
-        if (isGreaterThanCount) {
-          this.previousindex = this.imagecount - 1
-        }
-        if (isLowerThanZero) {
-          this.previousindex = 0
-        }
-      } else if (event.keyCode === 39) {
-        let index = this.previousindex + 1
-        const isTheSamePrevious = this.previousindex === index
-        const isLowerThanZero = index < 0
-        const isGreaterThanCount = index > this.imagecount - 1
-        arrowleft.classList.remove('Gallery__button-left--disabled')
-        if (index >= this.imagecount - 1) {
-          arrowright.classList.add('Gallery__button-right--disabled')
-        } else {
-          arrowright.classList.remove('Gallery__button-right--disabled')
-        }
-        if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
-          this.enableNewdisablePrevious(index)
-        }
-        this.previousindex = index
-        if (isGreaterThanCount) {
-          this.previousindex = this.imagecount - 1
-        }
-        if (isLowerThanZero) {
-          this.previousindex = 0
-        }
+      if (event.key === 'ArrowLeft') {
+        let index = this.currentIndex - 1
+        this.changeState(index)
+      } else if (event.key === 'ArrowRight') {
+        let index = this.currentIndex + 1
+        this.changeState(index)
       }
-    }, true)
+    })
   }
 
-  enableNewdisablePrevious (indexnew) {
-    const images = this.imagecontainer.querySelectorAll('.Gallery__image-item')
-    const items = this.pointscontainer.querySelectorAll('.Gallery__button-point')
-    items[this.previousindex].classList.remove('Gallery__button-point--selected')
-    items[indexnew].classList.add('Gallery__button-point--selected')
-    images[this.previousindex].classList.remove('Gallery__image-item--selected')
-    images[indexnew].classList.add('Gallery__image-item--selected')
-    items[indexnew].focus()
+  changeState (index) {
+    this.checkArrows(index)
+    this.enableNewdisablePrevious(index, this.currentIndex)
+  }
+
+  checkArrows (index) {
+    if (index <= 0) {
+      this.arrowleft.classList.add('Gallery__button-left--disabled')
+    } else {
+      this.arrowleft.classList.remove('Gallery__button-left--disabled')
+    }
+    if (index >= this.imagecount - 1) {
+      this.arrowright.classList.add('Gallery__button-right--disabled')
+    } else {
+      this.arrowright.classList.remove('Gallery__button-right--disabled')
+    }
+  }
+
+  enableNewdisablePrevious (indexnew, currentIndex) {
+    const isTheSamePrevious = currentIndex === indexnew
+    const isLowerThanZero = indexnew < 0
+    const isGreaterThanCount = indexnew > this.imagecount - 1
+    if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
+      this.items[currentIndex].classList.remove('Gallery__button-point--selected')
+      this.items[indexnew].classList.add('Gallery__button-point--selected')
+      this.images[currentIndex].classList.remove('Gallery__image-item--selected')
+      this.images[indexnew].classList.add('Gallery__image-item--selected')
+      this.items[indexnew].focus()
+    }
+    this.currentIndex = indexnew
+    if (isGreaterThanCount) {
+      this.currentIndex = this.imagecount - 1
+    }
+    if (isLowerThanZero) {
+      this.currentIndex = 0
+    }
   }
 }
