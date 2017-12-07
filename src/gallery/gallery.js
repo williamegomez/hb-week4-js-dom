@@ -18,8 +18,16 @@ export class Gallery {
     this.setEvents()
   }
 
+  static get states () {
+    return {
+      imageSelected: 'Gallery__image-item--selected',
+      pointSelected: 'Gallery__button-point--selected',
+      btnLeftDisable: 'Gallery__button-left--disabled',
+      btnRightDisable: 'Gallery__button-right--disabled'
+    }
+  }
+
   inflateHTML () {
-    console.log('Inflating gallery')
     const html = (`<div class="Gallery__arrows-container">
                     <button class="Gallery__button Gallery__button-left Gallery__button-left--disabled"></button>
                     <button class="Gallery__button Gallery__button-right"></button>
@@ -49,11 +57,9 @@ export class Gallery {
 
   setEvents () {
     // Dot-events
-    const items = this.pointscontainer.querySelectorAll('.Gallery__button-point')
-    items.forEach((item, index) => {
-      item.addEventListener('click', () => {
-        this.changeState(index)
-      })
+    this.pointscontainer.addEventListener('click', (event) => {
+      var index = Array.from(this.pointscontainer.querySelectorAll('.Gallery__button-point')).indexOf(event.target)
+      this.changeState(index)
     })
     // Arrows-events
     this.arrowleft.addEventListener('click', () => {
@@ -83,14 +89,14 @@ export class Gallery {
 
   checkArrows (index) {
     if (index <= 0) {
-      this.arrowleft.classList.add('Gallery__button-left--disabled')
+      this.arrowleft.classList.add(Gallery.states.btnLeftDisable)
     } else {
-      this.arrowleft.classList.remove('Gallery__button-left--disabled')
+      this.arrowleft.classList.remove(Gallery.states.btnLeftDisable)
     }
     if (index >= this.imagecount - 1) {
-      this.arrowright.classList.add('Gallery__button-right--disabled')
+      this.arrowright.classList.add(Gallery.states.btnRightDisable)
     } else {
-      this.arrowright.classList.remove('Gallery__button-right--disabled')
+      this.arrowright.classList.remove(Gallery.states.btnRightDisable)
     }
   }
 
@@ -99,10 +105,10 @@ export class Gallery {
     const isLowerThanZero = indexnew < 0
     const isGreaterThanCount = indexnew > this.imagecount - 1
     if (!isTheSamePrevious && !isLowerThanZero && !isGreaterThanCount) {
-      this.items[currentIndex].classList.remove('Gallery__button-point--selected')
-      this.items[indexnew].classList.add('Gallery__button-point--selected')
-      this.images[currentIndex].classList.remove('Gallery__image-item--selected')
-      this.images[indexnew].classList.add('Gallery__image-item--selected')
+      this.items[currentIndex].classList.remove(Gallery.states.pointSelected)
+      this.items[indexnew].classList.add(Gallery.states.pointSelected)
+      this.images[currentIndex].classList.remove(Gallery.states.imageSelected)
+      this.images[indexnew].classList.add(Gallery.states.imageSelected)
       this.items[indexnew].focus()
     }
     this.currentIndex = indexnew

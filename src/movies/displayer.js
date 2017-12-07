@@ -6,7 +6,7 @@ export class Displayer {
     this.inflateHTML()
     this.categoriesContainer = node.querySelector('.Displayer__list')
     this.resultsContainer = node.querySelector('.Displayer__results')
-    this.setCategories()
+    this.OrganizeCategories()
     this.setCards()
     this.itemCategory = this.categoriesContainer.querySelectorAll('.Displayer__radio-text')
     this.itemRadio = this.categoriesContainer.querySelectorAll('.Displayer__radio-category')
@@ -15,6 +15,16 @@ export class Displayer {
     this.backcarditems = this.resultsContainer.querySelectorAll('.Movie-card__back')
     this.currentRotated = -1
     this.setEvents()
+  }
+
+  static get states () {
+    return {
+      cardDeactivated: 'Movie-card--deactivated',
+      cardActivated: 'Movie-card--activated',
+      cardRotate: 'Movie-card--rotated',
+      cardRotateFront: 'Movie-card__front--rotated',
+      cardRotateBack: 'Movie-card__back--rotated'
+    }
   }
 
   inflateHTML () {
@@ -47,18 +57,18 @@ export class Displayer {
     }
   }
 
-  setCategories () {
+  OrganizeCategories () {
     const categories = this.data.map(function (value, index, array) {
       return value.category
     })
+    // Concat array of arrays
     var fullcategories = [].concat.apply([], categories)
     // Unique categories
     this.unicategories = fullcategories.filter(function (value, index, array) {
       return array.indexOf(value) === index
     })
     const htmlCategories = this.unicategories.map(function (value) {
-      var re = /{category}/gi
-      return Displayer.templates.listitem.replace(re, value)
+      return Displayer.templates.listitem.replace(/{category}/gi, value)
     }).join('')
     this.categoriesContainer.innerHTML = htmlCategories
   }
@@ -72,8 +82,6 @@ export class Displayer {
 
   setEvents () {
     this.categoriesContainer.addEventListener('click', (event) => {
-      // Para evitar pedir al dom en cada ocasion los items
-      // const index = Array.from(this.categoriesContainer.querySelectorAll(`.${event.target.classList[0]}`)).indexOf(event.target))
       if (event.target.classList[0] === 'Displayer__radio-text') {
         let index = Array.from(this.itemCategory).indexOf(event.target)
         this.setDisplayCards(index)
@@ -95,32 +103,32 @@ export class Displayer {
   setDisplayCards (index) {
     this.data.forEach((value, i) => {
       if (value.category.indexOf(this.unicategories[index]) !== -1) {
-        this.carditems[i].classList.remove('Movie-card--deactivated')
-        this.carditems[i].classList.add('Movie-card--activated')
+        this.carditems[i].classList.remove(Displayer.states.cardDeactivated)
+        this.carditems[i].classList.add(Displayer.states.cardActivated)
       } else {
-        this.carditems[i].classList.remove('Movie-card--activated')
-        this.carditems[i].classList.add('Movie-card--deactivated')
+        this.carditems[i].classList.remove(Displayer.states.cardActivated)
+        this.carditems[i].classList.add(Displayer.states.cardDeactivated)
       }
     })
   }
 
   RotateAndUnrotated (newtorotate, currentIndex) {
     console.log(newtorotate)
-    if (Array.from(this.carditems[newtorotate].classList).indexOf('Movie-card--rotated') === -1) {
-      console.log('No esta rotado')
-      this.carditems[newtorotate].classList.add('Movie-card--rotated')
-      this.frontcarditems[newtorotate].classList.add('Movie-card__front--rotated')
-      this.backcarditems[newtorotate].classList.add('Movie-card__back--rotated')
+    if (Array.from(this.carditems[newtorotate].classList).indexOf(Displayer.states.cardRotate) === -1) {
+      console.log('Not rotated')
+      this.carditems[newtorotate].classList.add(Displayer.states.cardRotate)
+      this.frontcarditems[newtorotate].classList.add(Displayer.states.cardRotateFront)
+      this.backcarditems[newtorotate].classList.add(Displayer.states.cardRotateBack)
       if (currentIndex !== -1 && currentIndex !== newtorotate) {
-        this.carditems[currentIndex].classList.remove('Movie-card--rotated')
-        this.frontcarditems[currentIndex].classList.remove('Movie-card__front--rotated')
-        this.backcarditems[currentIndex].classList.remove('Movie-card__back--rotated')
+        this.carditems[currentIndex].classList.remove(Displayer.states.cardRotate)
+        this.frontcarditems[currentIndex].classList.remove(Displayer.states.cardRotateFront)
+        this.backcarditems[currentIndex].classList.remove(Displayer.states.cardRotateBack)
       }
     } else {
-      console.log('Rotado')
-      this.carditems[newtorotate].classList.remove('Movie-card--rotated')
-      this.frontcarditems[newtorotate].classList.remove('Movie-card__front--rotated')
-      this.backcarditems[newtorotate].classList.remove('Movie-card__back--rotated')
+      console.log('Rotated')
+      this.carditems[newtorotate].classList.remove(Displayer.states.cardRotate)
+      this.frontcarditems[newtorotate].classList.remove(Displayer.states.cardRotateFront)
+      this.backcarditems[newtorotate].classList.remove(Displayer.states.cardRotateBack)
     }
   }
 }
