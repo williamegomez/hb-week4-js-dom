@@ -14,12 +14,12 @@
     "watch:css": "npm run build:css -- -w --source-map true",
     "watch:js": "onchange 'src/**/*.js' -- npm-run-all lint:js copy:js",
     "copy:html": "copy 'src/**/*.html' public",
-    "copy:js": "copy 'src/**/*.js' public",
     "copy:jpg": "copy 'src/**/*.jpg' public",
     "precommit": "npm run lint",
     "clean": "rm -rf public/",
     "start:build": "npm-run-all build serve",
-    "start": "npm-run-all copy:** build:css --parallel watch:** serve"
+    "start": "npm-run-all copy:** build:css webpack --parallel watch:** serve",
+    "webpack": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
