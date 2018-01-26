@@ -1,4 +1,5 @@
 import { Gallery } from './gallery.js'
+import './../index.scss'
 
 const imagesArray = ['https://www.uv.es/recursos/fatwirepub/ccurl/1004/586/big_data-1.png',
   'https://www.simplilearn.com/ice9/free_resources_article_thumb/Data-Science-vs.-Big-Data-vs.jpg',

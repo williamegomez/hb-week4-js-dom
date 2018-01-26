@@ -1,5 +1,6 @@
 import {Displayer} from './displayer.js'
 import cardArray from './data.js'
+import './../index.scss'
 
 /* eslint-disable */
 const d1 = new Displayer(document.querySelector('.d1'),cardArray)
